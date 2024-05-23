@@ -1,26 +1,22 @@
 //VARIABLES
 const formulario = document.getElementById('filmsForm');
-    const titulo = formulario.tituloPelicula.value;
-    const director = formulario.directorPelicula.value;
-    const year = formulario.yearPelicula.value;
-    const generoSelect = formulario.generoPelicula.value;
 const selectGenero = document.getElementById('generoPelicula');
 const filtrar = document.getElementById('filtrar');
-console.log(filtrar);
 const tabla = document.querySelector('.tablaContenido');
 const fragmento = document.createDocumentFragment();
 const arrayGeneros = ['terror', 'acción', 'romántica', 'comedia'];
 let arrayMostrar = [];
-let obj = {};
+// let obj = {};
 const regEx = {
     titulo: /^[a-zA-Z0-9\s.,'!?-ñÑ]+$/,
     director:  /^[a-zA-Z\s.-ñÑ]+$/,
-    year: /^(18[0-9]{2}|19[0-9]{2}|20[0-9]{2}|2100)$/  //new Date().getFullYear()
+    year: /^[\d]{4}$/  //new Date().getFullYear()
 }
 const objValidar = {
     titulo: false,
     director: false,
-    year: false
+    year: false,
+    genero: false
 }
 
 //EVENTOS
@@ -28,7 +24,7 @@ formulario.addEventListener('submit',(ev)=>{
     ev.preventDefault();
     validarForm();
     pintarTabla(arrayMostrar);
-    filtrar.disable = false;
+    formulario.reset();
 });
 
 filtrar.addEventListener('change', (ev) => {
@@ -42,6 +38,8 @@ const validarForm = () => {
     const director = formulario.directorPelicula.value;
     const year = formulario.yearPelicula.value;
     const generoSelect = formulario.generoPelicula.value;
+    const fechaActual = new Date().getFullYear();
+    let obj = {};
 
     if (titulo !== '') {
         if (regEx.titulo.test(titulo)) {
@@ -56,39 +54,53 @@ const validarForm = () => {
     } else objValidar.director = false;
     
     if (year !== '') {
-        if (regEx.year.test(year)) {
+        if ((year >= 1800 && year <= fechaActual) && regEx.year.test(year)) {
             objValidar.year = true;
         } else objValidar.year = false;
     } else objValidar.year = false;
 
+    if (generoSelect !== '--selecciona un género--') {
+        objValidar.genero = true;
+    } else objValidar.genero = false;
+
     const arrayObjValidar = Object.values(objValidar);
-    const correcto = arrayObjValidar.every((value) => value === true);
-    if (correcto) {
+    const correcto = arrayObjValidar.some((value) => value === false);
+    if (!correcto) {
         obj.titulo = titulo;
         obj.director = director;
         obj.year = year;
         obj.generoSelect = generoSelect;
         arrayMostrar.push(obj);
-        obj = {}; //reset de obj cada push
-        // pintarTabla();
+        filtrar.disabled = false;
+        // obj = {}; //reset de obj cada push
     } else {
         alert('Campos no válidos');
     }
 }
+
 
 //->MODIFICAR ELEMENTOS DEL DOM
 const limpiar = (componente) => {
     return componente.innerHTML = '';
 }
 
-const pintarOpcionesFiltro = (componente) => {
-    arrayGeneros.forEach((elemento) => {
+const pintarFalloFiltro = () => {
+    const fila = document.createElement('tr');
+    const celda1 = document.createElement('td');
+    celda1.textContent = 'No hay películas con ese género';
+    fila.append(celda1);
+    fragmento.append(fila);
+    tabla.append(fragmento);
+}
+
+const pintarOpcionesFiltro = (...array) => {
+    array.forEach((elemento) => {
         const genero = document.createElement('option');
         genero.textContent = elemento;
         genero.value = elemento;
         fragmento.append(genero);
     });
-    componente.append(fragmento);
+    return fragmento;
 }
 
 const pintarTabla = (data) => {
@@ -107,19 +119,25 @@ const pintarTabla = (data) => {
         fragmento.append(fila);
     });
     tabla.append(fragmento);
-    // filtrar.disable = false;
 }
 
 const filtrarPorGenero = () => {
-    const generoFiltrar = filtrar.value;
-    const filtered = generoFiltrar === 'all'
-        ? arrayMostrar
-        : arrayMostrar.filter((peli) => peli.generoSelect === generoFiltrar);
+        const generoFiltrar = filtrar.value;
+        let filtered = arrayMostrar.filter((peli) => peli.generoSelect === generoFiltrar);
 
-    pintarTabla(filtered);
+        if (filtered.length > 0) {
+            pintarTabla(filtered);
+        }
+        if (filtered.length === 0) {
+            limpiar(tabla);
+            pintarFalloFiltro();
+        }
+        if (filtrar.value === 'Todos') {
+            pintarTabla(arrayMostrar);
+        }
 }
 
 //INVOCACIONES
-pintarOpcionesFiltro(selectGenero);
-pintarOpcionesFiltro(filtrar);
+selectGenero.append(pintarOpcionesFiltro('--selecciona un género--', ...arrayGeneros));
+filtrar.append(pintarOpcionesFiltro('Todos', ...arrayGeneros));
 

@@ -69,3 +69,9 @@ table {
 .tabla {
     width: 100%;
 }
+
+.texto-fallo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const arrayPelis = [
+            {
+                titulo: 'peli1',
+                genero: 'Terror'
+            },
+            {
+                titulo: 'peli2',
+                genero: 'Comedia'
+            },
+            {
+                titulo: 'peli3',
+                genero: 'Comedia'
+            },
+            {
+                titulo: 'peli4',
+                genero: 'Aventuras'
+            },
+            {
+                titulo: 'peli5',
+                genero: 'Terror'
+            }
+        ];
+
+        let array1 = [];
+        arrayPelis.forEach(({titulo, genero}) => {
+            array1.push(genero);
+        })
+        console.log(array1);
+        let arrayUnicos = new Set(array1);
+        console.log(arrayUnicos);
+    </script>
+</body>
+</html>
