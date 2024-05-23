@@ -31,18 +31,18 @@ fieldset #submit {
     width: 25%;
     height: 54px;
     align-self: center;
-    background-color: #007cff;
+    background-color: black;
     color: white;
+    background-color: gray;
     font-weight: bold;
-    border-radius: 12px;
-    border: 2px solid #007cff;
+    border: 2px solid black;
     box-shadow: 2px 2px 0 0 white,
-    4px 4px 0 0 #007cff;
+    4px 4px 0 0 black;
 }
 
 fieldset #submit:hover {
     box-shadow: 3px 3px white,
-    6px 6px #007cff;
+    6px 6px black;
     transform: translate(-2px -2px);
 }
 
