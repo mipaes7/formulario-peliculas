@@ -4,8 +4,8 @@ const selectGenero = document.getElementById('generoPelicula');
 const filtrar = document.getElementById('filtrar');
 const tabla = document.querySelector('.tablaContenido');
 const fragmento = document.createDocumentFragment();
-const arrayGeneros = ['terror', 'acción', 'romántica', 'comedia'];
-let arrayMostrar = [];
+const arrayGeneros = ['Terror', 'Acción', 'Romántica', 'Comedia'];
+let arrayMostrar = JSON.parse(localStorage.getItem('pelis')) || [];
 // let obj = {};
 const regEx = {
     titulo: /^[a-zA-Z0-9\s.,'!?-ñÑ]+$/,
@@ -23,6 +23,8 @@ const objValidar = {
 document.addEventListener('DOMContentLoaded', () => {
     selectGenero.append(pintarOpcionesFiltro('--selecciona un género--', ...arrayGeneros));
     filtrar.append(pintarOpcionesFiltro('Todos', ...arrayGeneros));
+    pintarTabla(arrayMostrar);
+    toggleFiltrar();
 });
 
 formulario.addEventListener('submit',(ev)=>{
@@ -30,10 +32,12 @@ formulario.addEventListener('submit',(ev)=>{
     validarForm();
     pintarTabla(arrayMostrar);
     formulario.reset();
+    guardar();
 });
 
 filtrar.addEventListener('change', (ev) => {
     filtrarPorGenero();
+    guardar();
 });
 
 //FUNCIONES
@@ -83,6 +87,10 @@ const validarForm = () => {
     }
 }
 
+//->USAR LOCALSTORAGE
+const guardar = () => {
+    localStorage.setItem('pelis', JSON.stringify(arrayMostrar));
+}
 
 //->MODIFICAR ELEMENTOS DEL DOM
 const limpiar = (componente) => {
@@ -141,6 +149,14 @@ const filtrarPorGenero = () => {
         if (filtrar.value === 'Todos') {
             pintarTabla(arrayMostrar);
         }
+}
+
+const toggleFiltrar = () => {
+    if (tabla.innerHTML !== '') {
+        filtrar.disabled = false;
+    } else {
+        filtrar.disabled = true;
+    }
 }
 
 //INVOCACIONES

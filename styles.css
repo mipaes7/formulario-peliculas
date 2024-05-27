@@ -41,9 +41,9 @@ fieldset #submit {
 }
 
 fieldset #submit:hover {
-    box-shadow: 3px 3px white,
+    box-shadow: 4px 4px white,
     6px 6px black;
-    transform: translate(-2px -2px);
+    transform: translate(4px 4px);
 }
 
 
@@ -68,10 +68,4 @@ table {
 
 .tabla {
     width: 100%;
-}
-
-.texto-fallo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
